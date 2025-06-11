@@ -1,110 +1,61 @@
 const mongoose = require("mongoose");
 
-const ProductSchema = mongoose.Schema({
-  name: {
+const PropertiesSchema = mongoose.Schema({
+  address: {
     type: String,
-    // required: true,
+    required: true,
   },
   image: {
     type: Array,
-    // required: true,
-  },
-  category: {
-    type: String,
-    required: true,
-    default:"Customize",
-    unique: false
-  },
-  rating: {
-    type: String,
-    // required: true,
-  },
-  affilateLink: {
-    type: String,
-  },
-  availableCustomise: {
-    type: Boolean,
-    required: true,
-    default:false
-  },
-  review: {
-    type: String,
-    // required: true,
-  },
-  // sub_category: {
-  //   type: String,
-  //   required: true,
-  // },
-  // tags: {
-  //   type: String,
-  // },
-  // brand: {
-  //   type: String,
-  // },
-  // gst: {
-  //   type: String,
-  // },
-  // slug: {
-  //   type: String,
-  // },
-  description: {
-    type: String,
-    // required: true,
-  },
-  sort_description: {
-    type: String,
-    // required: true,
-  },
-  discount_key: {
-    type: String,
-  },
-  new_price: {
-    type: String,
-    // required: true,
-  },
-  old_price: {
-    type: String,
-    // required: true,
-  },
-  // quantity: {
-  //   type: Number,
-  //   required: true,
-  // },
-  is_publish: {
-    type: Boolean,
-    default:true,
     required: true,
   },
-  sku_id: {
+  property_belongsTo: {
+    type: String,
+    required: true,
+    },
+  looking_to: {
     type: String,
     required: true,
   },
-  // hsn_code: {
-  //   type: String,
-  //   required: true,
-  // },
-  is_new: {
+  Carpet_Area: {
     type: String,
+    required: true,
   },
-  discount: {
+  Other_Area: {
+    type: String,
+    required: true,
+  },
+  Popular_Area: {
+    type: String,
+    required: true,
+  },
+  type_of_property : {
+    type: String,
+    required: true,
+  },
+  Property_Suitable_For: {
+    type: Array,
+    required: true,
+  },
+  Type_of_Power: {
+    type: String,
+    required: true,
+  },
+  Type_of_Water_Supply: {
+    type: Array,
+    required: true,
+  },
+  Number_of_Washroom: {
     type: Number,
-    // required: true,
+    required: true,
   },
-  measurements: {
+
+  Financials: {
+    type: Number,
+    required: true,
+  },
+  Amenities: {
     type: Array,
-    // required: true,
-  },
-  additional_info: {
-    type: Array,
-    // required: true,
-  },
-  items: {
-    type: Array,
-    // required: true,
-  },
-  expires_date: {
-    type: Date,
-    // default: Date.now
     // required: true,
   },
   date: {
@@ -114,4 +65,4 @@ const ProductSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Products", ProductSchema);
+module.exports = mongoose.model("Properties", PropertiesSchema);

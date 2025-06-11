@@ -1,32 +1,20 @@
 const mongoose = require("mongoose");
+const Properties = require("./Properties");
 
 const UserSchema = mongoose.Schema({
-  first_name: {
+  person_name: {
     type: String,
     required: true,
   },
-  last_name: {
+  Property_belongsto: {
     type: String,
     required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true
   },
   Phone_number: {
     type: String,
     required: true,
   },
-  resident_address: {
-    type: String,
-    required: true,
-  },
-  Pincode: {
-    type: String,
-    required: true,
-  },
-  State: {
+  email: {
     type: String,
     required: true,
   },
@@ -34,25 +22,23 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  Country: {
-    type: String,
-    required: true,
-  },
   password: {
     type: String,
     required: true,
   },
+  is_admin: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
   user_type: {
     type: String,
     required: true,
-    default: "user"
   },
-  // contact_information: {
-  //   type: Array,
-  // },
-  // shipping_address: {
-  //   type: Array,
-  // }
+  date: {
+    type: Date,
+    default: Date.now
+  },
 });
 
 module.exports = mongoose.model("Users", UserSchema);
