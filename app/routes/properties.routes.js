@@ -4,24 +4,27 @@ module.exports = (app, upload) => {
   var authenticate = require("../middleware/authenticate.js");
   var router = require("express").Router();
   var Upload_Image = upload.fields([
-      { name: "image", maxCount: 4 },
-      { name: "image0", maxCount: 1 },
-      { name: "image1", maxCount: 1 },
-      { name: "image2", maxCount: 1 },
-      { name: "image3", maxCount: 1 },
+      { name: "image", maxCount: 10 },
     ]);
+
+    
   router.post(
-    "/createProduct",
+    "/createProperties",
     Upload_Image,
-    authenticate,
-    [check("name").not().isEmpty().trim().escape()],
-    // [check("image").not().isEmpty().trim().escape()],
-    [check("category").not().isEmpty().trim().escape()],
-    [check("new_price").not().isEmpty().trim().escape()],
-    // [check("old_price").not().isEmpty().trim().escape()],
-    // [check("quantity").not().isEmpty().trim().escape()],
-    [check("sku_id").not().isEmpty().trim().escape()],
-    product.createProduct
+    [check("property_belongsTo").not().isEmpty().trim().escape()],
+    [check("address").not().isEmpty().trim().escape()],
+    [check("looking_to").not().isEmpty().trim().escape()],
+    [check("Carpet_Area").not().isEmpty().trim().escape()],
+    [check("Other_Area").not().isEmpty().trim().escape()],
+    [check("Popular_Area").not().isEmpty().trim().escape()],
+    [check("type_of_property").not().isEmpty().trim().escape()],
+    [check("Property_Suitable_For").not().isEmpty().trim().escape()],
+    [check("Type_of_Power").not().isEmpty().trim().escape()],
+    [check("Type_of_Water_Supply").not().isEmpty().trim().escape()],
+    [check("Number_of_Washroom").not().isEmpty().trim().escape()],
+    [check("Financials").not().isEmpty().trim().escape()],
+    [check("Amenities").not().isEmpty().trim().escape()],
+    product.createProperties
   );
   router.post(
     "/createCustomProduct",
@@ -44,5 +47,5 @@ module.exports = (app, upload) => {
     "/getProduct/:productId", product.getProduct
   );
 
-  app.use("/api/product", router);
+  app.use("/api/properties", router);
 };

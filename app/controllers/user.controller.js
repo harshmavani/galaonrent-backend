@@ -15,19 +15,9 @@ exports.Signup = async (req, res) => {
         status: 400,
       });
     } else {
-      const user = new User({
-        email: req.body.email,
-        password: req.body.password,
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        Phone_number: req.body.Phone_number,
-        resident_address: req.body.resident_address,
-        Pincode: req.body.Pincode,
-        State: req.body.State,
-        City: req.body.City,
-        Country: req.body.Country,
-        user_type: req.body.user_type
-      });
+      const user = new User(
+        req.body
+      );
 
       try {
         const savedUsers = await user.save();
@@ -43,35 +33,35 @@ exports.Signup = async (req, res) => {
   });
 };
 
-exports.Signin = async (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  User.findOne({ email: req.body.email }).then(async (user) => {
-    if (!user) {
-      res.json({
-        message: "email not found",
-        status: 400,
-      });
-    } else {
-      if (user.password == req.body.password) {
-        try {
-          res.json({
-            message: "User login Successfully",
-            status: 200,
-            token: jwt.sign(user.id, "dont_be_oversmart"),
-            data: user,
-          });
-        } catch (err) {
-          res.json({ message: err, status: 400 });
-        }
-      } else {
-        res.json({
-          message: "invalid password",
-          status: 400,
-        });
-      }
-    }
-  });
-};
+// exports.Signin = async (req, res) => {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   User.findOne({ email: req.body.email }).then(async (user) => {
+//     if (!user) {
+//       res.json({
+//         message: "email not found",
+//         status: 400,
+//       });
+//     } else {
+//       if (user.password == req.body.password) {
+//         try {
+//           res.json({
+//             message: "User login Successfully",
+//             status: 200,
+//             token: jwt.sign(user.id, "dont_be_oversmart"),
+//             data: user,
+//           });
+//         } catch (err) {
+//           res.json({ message: err, status: 400 });
+//         }
+//       } else {
+//         res.json({
+//           message: "invalid password",
+//           status: 400,
+//         });
+//       }
+//     }
+//   });
+// };
 
 exports.Edituser = async (req, res) => {
   res.header("Access-Control-Allow-Origin", "*");

@@ -18,17 +18,12 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  City: {
-    type: String,
-    required: true,
-  },
-  password: {
+  city: {
     type: String,
     required: true,
   },
   is_admin: {
     type: Boolean,
-    required: true,
     default: false
   },
   user_type: {

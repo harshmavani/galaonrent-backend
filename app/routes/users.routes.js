@@ -7,28 +7,24 @@ module.exports = (app) => {
   router.post(
     "/Signup",
     [
-      check("email").not().isEmpty().trim().escape(),
-      check("password").not().isEmpty().trim().escape(),
-      check("first_name").not().isEmpty(),
-      check("last_name").not().isEmpty(),
+      check("Property_belongsto").not().isEmpty().trim().escape(),
+      check("person_name").not().isEmpty().trim().escape(),
       check("Phone_number").not().isEmpty(),
-      check("resident_address").not().isEmpty(),
-      check("Pincode").not().isEmpty(),
-      check("State").not().isEmpty(),
-      check("City").not().isEmpty(),
-      check("Country").not().isEmpty(),
+      check("email").not().isEmpty(),
+      check("user_type").not().isEmpty(),
+      check("city").not().isEmpty(),
     ],
     user.Signup
   );
 
-  router.post(
-    "/Signin",
-    [
-      check("email").not().isEmpty().trim().escape(),
-      check("password").not().isEmpty().trim().escape(),
-    ],
-    user.Signin
-  );
+  // router.post(
+  //   "/Signin",
+  //   [
+  //     check("email").not().isEmpty().trim().escape(),
+  //     check("password").not().isEmpty().trim().escape(),
+  //   ],
+  //   user.Signin
+  // );
   router.put(
     "/Edituser/:userId",
     authenticate,

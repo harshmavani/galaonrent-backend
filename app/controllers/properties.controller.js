@@ -1,5 +1,5 @@
 const { check, validationResult } = require("express-validator");
-const Product = require("../models/Properties");
+const Properties = require("../models/Properties");
 const fs = require("fs");
 const path = require("path");
 const { v4: uuidv4 } = require('uuid');
@@ -23,7 +23,7 @@ exports.getAllProducts = async (req, res) => {
     }
 
     // Fetch paginated products
-    const products = await Product.find(filter)
+    const products = await Properties.find(filter)
       // .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -54,7 +54,7 @@ exports.getAllProducts = async (req, res) => {
       };
     });
 
-    const totalProducts = await Product.countDocuments(filter);
+    const totalProducts = await Properties.countDocuments(filter);
 
     res.json({
       status: 200,
@@ -77,7 +77,7 @@ exports.getAllProducts = async (req, res) => {
 
 //     // Cursor-based pagination using createdAt
 //     if (page > 1) {
-//       const previousProducts = await Product.find(filter)
+//       const previousProducts = await Properties.find(filter)
 //         .sort({ createdAt: -1 })
 //         .limit((page - 1) * limit);
 
@@ -88,7 +88,7 @@ exports.getAllProducts = async (req, res) => {
 //     }
 
 //     // Fetch products with pagination filter
-//     let products = await Product.find(filter)
+//     let products = await Properties.find(filter)
 //       .sort({ createdAt: -1 })
 //       .limit(limit);
 
@@ -133,7 +133,7 @@ exports.getAllProducts = async (req, res) => {
 //       groupedByCategory[category].push(product);
 //     });
 
-//     const totalProducts = await Product.countDocuments({ availableCustomise: true });
+//     const totalProducts = await Properties.countDocuments({ availableCustomise: true });
 
 //     // Send response
 //     res.json({
@@ -158,7 +158,7 @@ exports.getProductsByCategory = async (req, res) => {
 
     // Cursor-based pagination
     if (page > 1) {
-      const previousProducts = await Product.find(filter)
+      const previousProducts = await Properties.find(filter)
         .sort({ createdAt: -1 })
         .limit((page - 1) * limit);
 
@@ -169,7 +169,7 @@ exports.getProductsByCategory = async (req, res) => {
     }
 
     // Fetch products with pagination
-    let products = await Product.find(filter)
+    let products = await Properties.find(filter)
       .sort({ createdAt: -1 })
       .limit(limit);
 
@@ -216,7 +216,7 @@ exports.getProductsByCategory = async (req, res) => {
     const backgrounds = await Background.find().lean();
     groupedByCategory["background"] = backgrounds;
 
-    const totalProducts = await Product.countDocuments({ availableCustomise: true });
+    const totalProducts = await Properties.countDocuments({ availableCustomise: true });
 
     res.json({
       status: 200,
@@ -241,10 +241,10 @@ exports.getProduct = async (req, res) => {
 
   try {
     const productId = req.params.productId;
-    const product = await Product.findById(productId);
+    const product = await Properties.findById(productId);
 
     if (!product) {
-      return res.status(404).json({ message: "Product not found" });
+      return res.status(404).json({ message: "Properties not found" });
     }
 
     // Fetch reviews for the product
@@ -277,10 +277,10 @@ exports.deleteProduct = async (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
     try {
         const productId = req.params.productId;
-        const deletedProduct = await Product.findByIdAndDelete(productId);
+        const deletedProduct = await Properties.findByIdAndDelete(productId);
 
         if (!deletedProduct) {
-            return res.status(404).json({ message: "Product not found" });
+            return res.status(404).json({ message: "Properties not found" });
         }
  // Delete image files if they exist
  if (deletedProduct.image && Array.isArray(deletedProduct.image)) {
@@ -292,7 +292,7 @@ exports.deleteProduct = async (req, res) => {
     }
   });
 }
-        res.json({ status: 200, message: "Product deleted successfully" });
+        res.json({ status: 200, message: "Properties deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: "Server error", error });
     }
@@ -309,9 +309,9 @@ exports.editProduct = async (req, res) => {
         const productId = req.params.productId;
 
         // Fetch the current product to check its existing images
-        const product = await Product.findById(productId);
+        const product = await Properties.findById(productId);
         if (!product) {
-            return res.status(404).json({ message: "Product not found" });
+            return res.status(404).json({ message: "Properties not found" });
         }
 
         // Initialize the array to hold updated image paths
@@ -346,19 +346,19 @@ exports.editProduct = async (req, res) => {
         }
 
         // Update the product with the new image paths
-        const updatedProduct = await Product.findByIdAndUpdate(
+        const updatedProduct = await Properties.findByIdAndUpdate(
             productId,
             { ...req.body, image: imagePaths },
             { new: true, runValidators: true }
         );
 
         if (!updatedProduct) {
-            return res.status(404).json({ message: "Product not found" });
+            return res.status(404).json({ message: "Properties not found" });
         }
 
         res.json({
             status: 200,
-            message: "Product Updated Successfully",
+            message: "Properties Updated Successfully",
             data: updatedProduct,
         });
     } catch (error) {
@@ -368,12 +368,14 @@ exports.editProduct = async (req, res) => {
 };
 
 
-exports.createProduct = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-    let imagePaths = [];
+
+exports.createProperties = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  let imagePaths = [];
 
   if (req.files && req.files.image) {
     req.files.image.forEach(file => {
@@ -382,23 +384,36 @@ exports.createProduct = async (req, res) => {
       const ext = originalName.split(".").pop();
       const newPath = "uploads/" + uploadedName + "." + ext;
 
-      // Rename the uploaded file with extension
       fs.renameSync("uploads/" + uploadedName, newPath);
-
       imagePaths.push(newPath);
     });
   }
-    res.header("Access-Control-Allow-Origin", "*");
-    try {
-        req.body.image = imagePaths
-        const newProduct = new Product(req.body);
-        const savedProduct = await newProduct.save();
 
-        res.status(200).json({ status: 200, data: savedProduct });
-    } catch (error) {
-        res.status(500).json({ message: "Server error", error });
+  try {
+    const userId = req.body.userId; // make sure this is passed in req.body
+
+    // 1. Check how many products this user already has
+    const existingCount = await Properties.countDocuments({ userId });
+
+    // 2. Enforce limit
+    if (existingCount >= 5) {
+      return res.status(403).json({
+        status: 403,
+        message: "You can only create up to 5 properties."
+      });
     }
+
+    // 3. Proceed with creation
+    req.body.image = imagePaths;
+    const newProduct = new Properties(req.body);
+    const savedProduct = await newProduct.save();
+
+    res.status(200).json({ status: 200, data: savedProduct });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
 };
+
 
 // exports.createCustomProduct = async (req, res) => {
 //   const errors = validationResult(req);
@@ -445,7 +460,7 @@ exports.createProduct = async (req, res) => {
 //     req.body.measurements = req.body.dimensions;
 //     req.body.new_price = req.body.TotalPrice;
 
-//     const newProduct = new Product(req.body);
+//     const newProduct = new Properties(req.body);
 //     const savedProduct = await newProduct.save();
 
 //        // Add product to cart
@@ -487,7 +502,7 @@ exports.createProduct = async (req, res) => {
 //       cart: updatedCart,
 //     });
 //   } catch (error) {
-//     console.error("Custom Product Error:", error);
+//     console.error("Custom Properties Error:", error);
 //     res.status(500).json({ message: "Server error", error });
 //   }
 // };
@@ -541,7 +556,7 @@ exports.createCustomProduct = async (req, res) => {
     req.body.new_price = req.body.TotalPrice;
 
     // Save product
-    const newProduct = new Product(req.body);
+    const newProduct = new Properties(req.body);
     const savedProduct = await newProduct.save();
 
     // Add product to user's cart
@@ -583,7 +598,7 @@ exports.createCustomProduct = async (req, res) => {
       cart: updatedCart
     });
   } catch (error) {
-    console.error("Custom Product Error:", error);
+    console.error("Custom Properties Error:", error);
     return res.status(500).json({ message: "Server error", error });
   }
 };
